@@ -1,0 +1,21 @@
+{
+  "results": {
+    "LinearRegression": {
+      "r2": 0.6556,
+      "mae": 0.0902,
+      "rmse": 0.1083
+    },
+    "RandomForest": {
+      "r2": 0.8585,
+      "mae": 0.0564,
+      "rmse": 0.0694
+    },
+    "GradientBoosting": {
+      "r2": 0.8851,
+      "mae": 0.0511,
+      "rmse": 0.0626
+    }
+  },
+  "best_model": "GradientBoosting",
+  "best_r2": 0.8851
+}

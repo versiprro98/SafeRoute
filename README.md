@@ -7,7 +7,7 @@ that predicts a continuous risk score (0-1) for any location in a real Pune
 corridor (Kothrud → Karve Nagar → Erandwane), which the A* search then uses
 as a continuous edge-weight penalty.
 
-## Why this data approach (be ready to explain this honestly in interviews)
+## Why this data approach 
 Granular, point-level crime/incident data is **not publicly available** in
 India — NCRB only publishes city/district-level yearly aggregates. The most
 credible public methodology for street-level urban safety is **Safetipin's

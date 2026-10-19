@@ -1,0 +1,13 @@
+# macOS system files
+.DS_Store
+
+# Compiled binaries
+safe_app
+*.o
+
+# Python
+__pycache__/
+*.pyc
+
+# Vercel deployment folder
+.vercel

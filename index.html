@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeRoute Pune — AI Safety Navigation Engine</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container" id="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar" id="sidebar">
+            <header class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <div>
+                        <div class="logo-title-row">
+                            <h1>SafeRoute Pune</h1>
+                            <span class="version-tag">AI Safety</span>
+                        </div>
+                        <span class="subtitle">ML Risk-Aware Navigation Engine</span>
+                    </div>
+                </div>
+                <button id="sidebar-collapse-btn" class="sidebar-toggle-btn" title="Hide Sidebar" aria-label="Hide Sidebar">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </header>
+
+            <div class="sidebar-content">
+                <!-- Location Configuration -->
+                <section class="section">
+                    <div class="section-header-row">
+                        <h2 class="section-title"><i data-lucide="map-pin"></i> Route Settings</h2>
+                        <button id="btn-clear-route" class="btn-text-action" title="Reset current route">
+                            <i data-lucide="rotate-ccw"></i> Reset
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="start-node">Start Neighborhood</label>
+                        <div class="select-wrapper">
+                            <select id="start-node" class="form-control">
+                                <option value="">Choose start location or click map...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-node">End Neighborhood</label>
+                        <div class="select-wrapper">
+                            <select id="end-node" class="form-control">
+                                <option value="">Choose destination or click map...</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Parameter Sliders -->
+                <section class="section">
+                    <h2 class="section-title"><i data-lucide="sliders"></i> Risk Parameters</h2>
+                    
+                    <div class="form-group">
+                        <div class="label-with-val">
+                            <label for="time-of-day">Time of Day</label>
+                            <span id="time-display" class="badge">12:00 PM</span>
+                        </div>
+                        <input type="range" id="time-of-day" min="0" max="23" value="12" class="slider slider-blue">
+                        <div class="slider-labels">
+                            <span>12 AM</span>
+                            <span>6 AM</span>
+                            <span>12 PM</span>
+                            <span>6 PM</span>
+                            <span>11 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="label-with-val">
+                            <label for="safety-weight">Safety Optimization Weight</label>
+                            <span id="weight-display" class="badge badge-green">Medium</span>
+                        </div>
+                        <input type="range" id="safety-weight" min="0" max="10" value="5" step="1" class="slider slider-green">
+                        <div class="slider-labels">
+                            <span>Shortest Distance</span>
+                            <span>Balanced</span>
+                            <span>Maximum Safety</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Route Mode Toggle -->
+                <section class="section">
+                    <label class="field-label">Routing Strategy</label>
+                    <div class="toggle-container">
+                        <button id="mode-shortest" class="btn-toggle active" type="button">
+                            <i data-lucide="navigation"></i>
+                            Shortest Path
+                        </button>
+                        <button id="mode-safest" class="btn-toggle" type="button">
+                            <i data-lucide="shield"></i>
+                            Safest Path
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Metrics & Comparison Card -->
+                <section class="section metrics-section">
+                    <h2 class="section-title"><i data-lucide="bar-chart-3"></i> Route Analytics</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-label">Total Distance</span>
+                            <span id="metric-distance" class="metric-val">-- km</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Average Risk</span>
+                            <span id="metric-risk" class="metric-val">--</span>
+                        </div>
+                        <div class="metric-card full-width">
+                            <div class="metric-card-header">
+                                <span class="metric-label">Route Safety Score</span>
+                                <span id="metric-safety-index" class="metric-desc">-- % Safe</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div id="safety-progress" class="progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="metrics-details">
+                        <div class="detail-row">
+                            <span class="detail-label"><i data-lucide="shield-alert"></i> High Risk Areas Avoided:</span>
+                            <span id="metric-avoided" class="detail-val">--</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label"><i data-lucide="building-2"></i> Nearby Police Stations:</span>
+                            <span id="metric-police" class="detail-val">--</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="sidebar-footer">
+                <p><i data-lucide="database"></i> Trained on Safetipin Pune Safety Audits (6,632 audit points, 8 parameters)</p>
+            </footer>
+        </aside>
+
+        <!-- Main Map Area -->
+        <main class="map-view" id="map-view">
+            <!-- Floating Button to Open Sidebar when collapsed -->
+            <button id="sidebar-expand-btn" class="sidebar-expand-btn hidden" title="Show Route Settings" aria-label="Show Route Settings">
+                <i data-lucide="panel-left-open"></i>
+                <span>Route Controls</span>
+            </button>
+
+            <!-- Heatmap / Overlays Panel (Top Right) -->
+            <div class="map-controls">
+                <div class="control-card">
+                    <div class="control-switch">
+                        <label class="switch" for="toggle-heatmap">
+                            <input type="checkbox" id="toggle-heatmap">
+                            <span class="slider-round"></span>
+                        </label>
+                        <span class="switch-title">Display Risk Heatmap</span>
+                    </div>
+                    <div class="heatmap-legend" id="heatmap-legend" style="display: none;">
+                        <span class="legend-safe">Safe</span>
+                        <div class="gradient-bar"></div>
+                        <span class="legend-risky">High Risk</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaflet Map Container -->
+            <div id="map"></div>
+
+            <!-- Help Tooltip (Bottom Left) -->
+            <div class="map-tooltip">
+                <p><i data-lucide="info"></i> Click anywhere on the map to set <strong>Start</strong> (<span class="text-green">Green</span>) and <strong>Destination</strong> (<span class="text-red">Red</span>).</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Smooth Heatmap -->
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Application Logic (with cache buster) -->
+    <script src="app.js?v=8"></script>
+</body>
+</html>
